@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Домодедовское авиапредприятие — IVAO VA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+<div class="app">
+  <div class="brand">
+    <div class="logo-icon">✈</div>
+    <h1>
+      Домодедовское авиапредприятие
+      <span class="sub">IVAO Virtual Airline</span>
+    </h1>
+    <div class="badge">IVAO VA</div>
+  </div>
+
+  <nav class="nav-tabs">
+    <a href="#home" data-page="home">Главная</a>
+    <a href="#leadership" data-page="leadership">Руководство</a>
+    <a href="#training" data-page="training">Обучение</a>
+    <a href="#fleet" data-page="fleet">Авиапарк</a>
+    <a href="#online" data-page="online">Онлайн</a>
+    <a href="#mayday" data-page="mayday" class="tab-emergency">121.5</a>
+  </nav>
+
+  <section id="page-home" class="page active">
+    <div class="hero">
+      <h2>Добро пожаловать в <span class="accent">Домодедовское<br>авиапредприятие</span></h2>
+      <p>Приветствую на сервере! Мы производим полёты по всей России в сети IVAO в интересах ГТЛК и S7 Airlines. Наши корни идут прямиком из Новосибирска и протягиваются до самого Калининграда.</p>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="num">5</span><span class="label">типов ВС</span></div>
+        <div class="stat-item"><span class="num">3</span><span class="label">инструктора</span></div>
+        <div class="stat-item"><span class="num">5</span><span class="label">хабов</span></div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <h3>🛬 Наши хабы</h3>
+      <div class="hub-list">
+        <div class="hub-item"><span class="code">UUDD</span> DME · Domodedovo</div>
+        <div class="hub-item"><span class="code">UMKK</span> KGD · Khrabrovo</div>
+        <div class="hub-item"><span class="code">USCC</span> CEK · Kurchatov</div>
+        <div class="hub-item"><span class="code">UNNT</span> OVB · Tolmachevo</div>
+        <div class="hub-item">
+          <span class="code">EDDL</span> DUS · Düsseldorf
+          <span class="note">(под вопросом)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <h3>📅 Планы развития</h3>
+      <ul class="plans-list">
+        <li><span class="date">30.09.2026</span> Расширение в сторону Юго-Востока</li>
+        <li><span class="date">02.10.2026</span> Расширение флота предприятия</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="page-leadership" class="page">
+    <div class="section-title">Администрация</div>
+    <div class="card-grid">
+      <div class="member-card">
+        <div class="photo-placeholder">👤</div>
+        <div class="member-name">Лев Гнеушев</div>
+        <div class="member-role">Основатель</div>
+        <div class="member-desc">Отвечает за рейсы, нумерацию и ливреи</div>
+      </div>
+      <div class="member-card">
+        <div class="photo-placeholder">👤</div>
+        <div class="member-name">Головин Максим Игоревич</div>
+        <div class="member-role">Сооснователь</div>
+        <div class="member-desc">Разработка кода, бот и базы данных</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-training" class="page">
+    <div class="section-title">Учебный центр</div>
+    <div class="card-grid">
+      <div class="member-card">
+        <div class="photo-placeholder">👤</div>
+        <div class="member-name">Лев Гнеушев</div>
+        <div class="badge-row">
+          <span class="badge">Инструктор</span>
+          <span class="badge">Экзаменатор</span>
+        </div>
+      </div>
+      <div class="member-card">
+        <div class="photo-placeholder">👤</div>
+        <div class="member-name">Головин Максим Игоревич</div>
+        <div class="badge-row">
+          <span class="badge">Инструктор</span>
+          <span class="badge">Экзаменатор</span>
+        </div>
+      </div>
+      <div class="member-card">
+        <div class="photo-placeholder">👤</div>
+        <div class="member-name">Данил Проненко</div>
+        <div class="badge-row">
+          <span class="badge">Инструктор</span>
+          <span class="badge">Экзаменатор</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-fleet" class="page">
+    <div class="section-title">Авиапарк</div>
+    <div class="livery-note">
+      <span class="icon">🎨</span>
+      <div>
+        В IVAO пока летаем в ливрее <strong>S7 Airlines</strong>. Однако у нас есть и <strong>собственная ливрея</strong> — она появится на самолётах чуть позже.
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="fleet-card">
+        <div class="photo-placeholder">✈</div>
+        <div class="fleet-name">Airbus A320</div>
+        <div class="fleet-desc">Узкофюзеляжный</div>
+      </div>
+      <div class="fleet-card">
+        <div class="photo-placeholder">✈</div>
+        <div class="fleet-name">Airbus A20N</div>
+        <div class="fleet-desc">A320neo · Узкофюзеляжный</div>
+      </div>
+      <div class="fleet-card">
+        <div class="photo-placeholder">✈</div>
+        <div class="fleet-name">Airbus A321</div>
+        <div class="fleet-desc">Узкофюзеляжный</div>
+      </div>
+      <div class="fleet-card">
+        <div class="photo-placeholder">✈</div>
+        <div class="fleet-name">Boeing 737-800</div>
+        <div class="fleet-desc">Узкофюзеляжный</div>
+      </div>
+      <div class="fleet-card">
+        <div class="photo-placeholder">✈</div>
+        <div class="fleet-name">Boeing 737-900</div>
+        <div class="fleet-desc">Узкофюзеляжный</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Онлайн-карта -->
+  <section id="page-online" class="page">
+    <div class="section-title">Онлайн · IVAO Network</div>
+
+    <div class="online-note">
+      <span class="icon">🛰️</span>
+      <div>
+        Данные подтягиваются из <strong>IVAO Whazzup API</strong>. Пока показаны все пилоты сети —
+        фильтрация по нашей ВАК появится, когда будет известен код ВАК или префикс позывных.
+      </div>
+    </div>
+
+    <div class="map-controls">
+      <input id="pilot-filter" type="text" placeholder="Фильтр: позывной, аэропорт, борт, VA-код…">
+      <button id="refresh-map" type="button">Обновить</button>
+      <span id="pilot-count" class="pilot-count">Загрузка…</span>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="map-error" class="map-error" style="display:none;"></div>
+  </section>
+
+  <!-- 121.5 MAYDAY -->
+  <section id="page-mayday" class="page page-emergency">
+    <div class="section-title section-title-emergency">
+      <span>121.5 — Система аварийных ситуаций (MAYDAY)</span>
+    </div>
+    <p class="emergency-intro">
+      <strong>Реализм начинается там, где заканчивается обыденность.</strong>
+      121.5 — внутренняя система ВАК, имитирующая реальную аварийную частоту. Она нужна не для драмы,
+      а для <strong>дисциплины, обучения и разбора полётов</strong>: каждый отказ фиксируется,
+      каждый вызов отрабатывается, каждый репорт становится материалом для роста пилота и всей ВАК.
+    </p>
+    <div class="emergency-grid">
+      <div class="emergency-card">
+        <div class="emergency-card-head">
+          <span class="emoji">📝</span>
+          <h3>Текстовый канал — Репорты инцидентов</h3>
+        </div>
+        <p>
+          После каждой нештатной ситуации пилот <strong>обязан</strong> оформить официальный репорт
+          в текстовом канале 121.5.
+        </p>
+        <div class="emergency-callout">
+          ⚠️ Репорт подаётся <strong>после посадки</strong>, а не в воздухе. В воздухе — только
+          голосовой MAYDAY-вызов. Текст — это уже документ.
+        </div>
+        <h4 class="emergency-subtitle">Структура репорта</h4>
+        <ul class="emergency-list">
+          <li><strong>Шапка</strong> — тип инцидента / аэропорт / тип ВС / бортовой</li>
+          <li><strong>Время (UTC)</strong> и краткое описание происшествия</li>
+          <li><strong>Позиция ВС</strong> — маршрут, этап, удаление от полосы</li>
+          <li><strong>Каскадные отказы</strong> — что «посыпалось» вслед за первичным</li>
+          <li><strong>Действия КВС</strong> — чек-листы, восстановление, управление</li>
+          <li><strong>Итог</strong> — посадка, V/S касания, состояние пассажиров</li>
+          <li><strong>Статус</strong> — расследование, работы по ВС</li>
+        </ul>
+      </div>
+      <div class="emergency-card">
+        <div class="emergency-card-head">
+          <span class="emoji">🎙️</span>
+          <h3>Голосовой канал 121.500 — Онлайн-мониторинг</h3>
+        </div>
+        <p>
+          «Живая» аварийная частота ВАК. Пилоты держат связь в течение всего полёта,
+          а дежурный диспетчер следит за обстановкой и готов прийти на помощь в любую секунду.
+        </p>
+        <div class="emergency-callout emergency-callout-info">
+          🎧 Диспетчерская служба 121.5 в стадии запуска — дежурства появятся позже.
+        </div>
+        <h4 class="emergency-subtitle">Как это работает</h4>
+        <ol class="emergency-ol">
+          <li><strong>Пилот выходит в рейс</strong> и заходит в голосовой канал 121.500.</li>
+          <li><strong>При отказе</strong> — короткий MAYDAY-вызов:
+            <pre class="code-inline">MAYDAY MAYDAY MAYDAY, [позывной], [характер отказа]</pre>
+          </li>
+          <li><strong>Диспетчер 121.5</strong> принимает вызов и подсказывает порядок действий.</li>
+          <li><strong>После посадки</strong> пилот оформляет репорт в текстовом канале.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="emergency-outro">
+      > <em>121.5 — это не про страх. Это про готовность. Тот, кто отработал MAYDAY
+      на тренажёре, в реальном полёте действует спокойно и точно.</em> ✈️
+    </div>
+  </section>
+</div>
+
+<footer class="footer">
+  <div class="footer-contacts">
+    <a class="contact-item" href="https://uudd-va.onrender.com" target="_blank" rel="noopener">
+      <span class="ico">🌐</span> uudd-va.onrender.com
+    </a>
+    <a class="contact-item" href="https://uudd-va.yhub.net" target="_blank" rel="noopener">
+      <span class="ico">🌐</span> uudd-va.yhub.net
+    </a>
+    <a class="contact-item" href="mailto:batareyka887@gmail.com">
+      <span class="ico">📧</span> batareyka887@gmail.com
+    </a>
+    <a class="contact-item" href="https://discord.com/" target="_blank" rel="noopener">
+      <span class="ico">💬</span> Разработчик: @ifastek
+    </a>
+    <a class="contact-item" href="https://discord.com/" target="_blank" rel="noopener">
+      <span class="ico">👑</span> CEO: @crabik1220
+    </a>
+  </div>
+  <div class="footer-meta">
+    <span>© 2026 Домодедовское авиапредприятие</span>
+    <span class="ivao-tag">IVAO VA</span>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
