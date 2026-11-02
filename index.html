@@ -5,186 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Домодедовское авиапредприятие — IVAO VA</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #0b0f17;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: #e3e9f0; line-height: 1.5; padding: 2rem 1.5rem; min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .app { max-width: 1300px; width: 100%; flex: 1; }
-    .brand {
-      display: flex; align-items: center; gap: 0.85rem; margin-bottom: 2rem;
-      background: rgba(18, 24, 35, 0.9); backdrop-filter: blur(6px);
-      border-radius: 2rem; padding: 1.2rem 1.8rem;
-      border: 1px solid rgba(90, 255, 120, 0.18);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); flex-wrap: wrap;
-      position: relative; overflow: hidden;
-    }
-    .brand::after {
-      content: ''; position: absolute; bottom: 0; left: 0;
-      width: 100%; height: 3px;
-      background: linear-gradient(90deg, #5aff78 0%, #5aff78 40%, transparent 100%);
-      opacity: 0.6;
-    }
-    .logo-icon {
-      background: #5aff78; width: 42px; height: 42px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem; font-weight: 700; color: #0b0f17;
-      box-shadow: 0 0 15px rgba(90, 255, 120, 0.4); flex-shrink: 0;
-    }
-    .brand h1 { font-weight: 600; font-size: 1.5rem; letter-spacing: -0.02em; color: #fff; line-height: 1.2; }
-    .brand h1 span { color: #5aff78; font-weight: 700; }
-    .brand .sub { display: block; font-size: 0.8rem; font-weight: 400; color: #9aa8b9; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 0.2rem; }
-    .brand .badge {
-      margin-left: auto; background: rgba(90, 255, 120, 0.12);
-      border: 1px solid rgba(90, 255, 120, 0.45); padding: 0.3rem 1rem;
-      border-radius: 40px; font-size: 0.8rem; font-weight: 500;
-      letter-spacing: 0.5px; color: #5aff78; text-transform: uppercase; white-space: nowrap;
-    }
-    .nav-tabs {
-      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem;
-      background: rgba(18, 24, 35, 0.9); backdrop-filter: blur(6px);
-      padding: 0.5rem; border-radius: 60px;
-      border: 1px solid rgba(90, 255, 120, 0.12);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-    .nav-tabs a {
-      text-decoration: none; color: #9aa8b9; font-weight: 500; font-size: 1rem;
-      padding: 0.8rem 2rem; border-radius: 60px; transition: all 0.25s ease;
-      letter-spacing: 0.3px; flex: 1 1 auto; min-width: 120px; text-align: center;
-    }
-    .nav-tabs a:hover { color: #e3e9f0; background: rgba(90, 255, 120, 0.06); }
-    .nav-tabs a.active { background: #5aff78; color: #0b0f17; font-weight: 600; box-shadow: 0 0 20px rgba(90, 255, 120, 0.3); }
-    .nav-tabs a.tab-emergency { color: #ff8a80; font-weight: 600; letter-spacing: 1px; }
-    .nav-tabs a.tab-emergency:hover { background: rgba(255, 90, 90, 0.08); color: #ffb3ab; }
-    .nav-tabs a.tab-emergency.active { background: #ff5a5a; color: #0b0f17; box-shadow: 0 0 22px rgba(255, 90, 90, 0.45); }
-    .page {
-      display: none; background: rgba(18, 24, 35, 0.9); backdrop-filter: blur(6px);
-      border-radius: 2.5rem; padding: 2rem 2rem 2.5rem;
-      border: 1px solid rgba(90, 255, 120, 0.15);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(90, 255, 120, 0.08) inset;
-      animation: fade 0.3s ease;
-    }
-    .page.active { display: block; }
-    @keyframes fade { from { opacity: 0.3; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .section-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 1.8rem; color: #fff; display: flex; align-items: center; gap: 0.7rem; }
-    .section-title::before { content: ''; display: inline-block; width: 8px; height: 28px; background: #5aff78; border-radius: 8px; box-shadow: 0 0 12px #5aff78; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.8rem; margin-top: 1rem; }
-    .member-card, .fleet-card {
-      background: #121a26; border-radius: 2rem; padding: 1.8rem 1.5rem 1.8rem;
-      border: 1px solid rgba(90, 255, 120, 0.1); transition: all 0.25s ease;
-      box-shadow: 0 12px 25px -10px rgba(0, 0, 0, 0.6); display: flex;
-      flex-direction: column; align-items: center; text-align: center;
-    }
-    .member-card:hover, .fleet-card:hover { border-color: rgba(90, 255, 120, 0.35); box-shadow: 0 20px 30px -12px #000000, 0 0 0 1px rgba(90, 255, 120, 0.2) inset; transform: translateY(-4px); }
-    .photo-placeholder {
-      width: 120px; height: 120px; background: #1f2a38; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1.3rem; border: 2px dashed #5aff78; color: #5aff78;
-      font-size: 2.5rem; font-weight: 300; opacity: 0.8;
-      transition: 0.2s; box-shadow: 0 0 15px rgba(90, 255, 120, 0.2);
-    }
-    .fleet-card .photo-placeholder {
-      width: 140px; height: 100px; border-radius: 18px; background: #1f2a38;
-      border: 2px dashed #5aff78; font-size: 2rem; line-height: 1;
-      display: flex; align-items: center; justify-content: center;
-      color: #5aff78; margin-bottom: 1.2rem;
-    }
-    .member-name { font-size: 1.4rem; font-weight: 600; color: #fff; letter-spacing: -0.01em; margin-bottom: 0.2rem; }
-    .member-role { color: #5aff78; font-weight: 500; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.6px; font-size: 0.85rem; }
-    .member-desc { color: #9aa8b9; font-size: 0.95rem; margin-bottom: 0.4rem; max-width: 240px; }
-    .badge-row { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 0.9rem; }
-    .badge { background: rgba(90, 255, 120, 0.1); border: 1px solid #5aff78; color: #5aff78; padding: 0.3rem 1rem; border-radius: 40px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
-    .fleet-name { font-size: 1.3rem; font-weight: 600; color: #fff; margin-bottom: 0.25rem; letter-spacing: -0.01em; }
-    .fleet-desc { color: #9aa8b9; font-size: 0.9rem; }
-    .livery-note { background: rgba(90, 255, 120, 0.07); border: 1px solid rgba(90, 255, 120, 0.25); border-radius: 1.2rem; padding: 1rem 1.4rem; margin-bottom: 1.8rem; font-size: 0.95rem; color: #cbd5e1; display: flex; align-items: flex-start; gap: 0.8rem; line-height: 1.55; }
-    .livery-note strong { color: #5aff78; font-weight: 600; }
-    .livery-note .icon { font-size: 1.4rem; line-height: 1; flex-shrink: 0; margin-top: 0.1rem; }
-    .hero { text-align: center; padding: 1rem 0 2rem; }
-    .hero h2 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em; color: #fff; margin-bottom: 1rem; line-height: 1.15; }
-    .hero h2 .accent { color: #5aff78; }
-    .hero p { color: #9aa8b9; font-size: 1.15rem; max-width: 720px; margin: 0 auto 1.8rem; line-height: 1.6; }
-    .hero-stats { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 1.2rem; }
-    .stat-item { background: #121a26; border: 1px solid rgba(90, 255, 120, 0.15); border-radius: 1.5rem; padding: 1.2rem 2rem; min-width: 140px; text-align: center; }
-    .stat-item .num { font-size: 1.8rem; font-weight: 700; color: #5aff78; display: block; line-height: 1.2; }
-    .stat-item .label { font-size: 0.85rem; color: #9aa8b9; text-transform: uppercase; letter-spacing: 0.5px; }
-    .info-block { background: rgba(90, 255, 120, 0.04); border: 1px solid rgba(90, 255, 120, 0.15); border-radius: 1.5rem; padding: 1.5rem 1.8rem; margin-top: 1.8rem; text-align: left; }
-    .info-block h3 { font-size: 1.15rem; font-weight: 600; color: #5aff78; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
-    .hub-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; margin-top: 0.6rem; }
-    .hub-item { background: #121a26; border: 1px solid rgba(90, 255, 120, 0.12); border-radius: 1rem; padding: 0.8rem 1.2rem; font-size: 0.92rem; color: #e3e9f0; display: flex; align-items: center; gap: 0.6rem; }
-    .hub-item .code { color: #5aff78; font-weight: 700; letter-spacing: 0.5px; }
-    .hub-item .note { font-size: 0.75rem; color: #6b7a8c; margin-left: auto; font-style: italic; }
-    .plans-list { list-style: none; margin-top: 0.6rem; }
-    .plans-list li { background: #121a26; border-left: 3px solid #5aff78; border-radius: 0.6rem; padding: 0.7rem 1.2rem; margin-bottom: 0.6rem; color: #e3e9f0; font-size: 0.95rem; }
-    .plans-list li .date { color: #5aff78; font-weight: 600; margin-right: 0.6rem; }
-    .page-emergency { border: 1px solid rgba(255, 90, 90, 0.25); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 90, 90, 0.1) inset; }
-    .section-title-emergency { color: #ffb3ab; font-size: 1.4rem; font-weight: 700; margin-bottom: 1.4rem; display: flex; align-items: center; gap: 0.8rem; }
-    .section-title-emergency::before { content: ''; display: inline-block; width: 8px; height: 28px; background: #ff5a5a; border-radius: 8px; box-shadow: 0 0 14px #ff5a5a; }
-    .emergency-intro { color: #cbd5e1; font-size: 1rem; line-height: 1.7; margin-bottom: 2rem; max-width: 900px; }
-    .emergency-intro strong { color: #ffb3ab; }
-    .emergency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; margin-bottom: 1.8rem; }
-    .emergency-card { background: #0f1622; border: 1px solid rgba(255, 90, 90, 0.18); border-radius: 1.8rem; padding: 1.6rem 1.6rem 1.8rem; box-shadow: 0 12px 25px -12px rgba(0, 0, 0, 0.7); }
-    .emergency-card p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.65; margin-bottom: 0.9rem; }
-    .emergency-card p strong { color: #ffb3ab; }
-    .emergency-card-head { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1rem; }
-    .emergency-card-head .emoji { font-size: 1.5rem; }
-    .emergency-card-head h3 { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
-    .emergency-subtitle { font-size: 0.85rem; font-weight: 700; color: #ffb3ab; text-transform: uppercase; letter-spacing: 1px; margin: 1.2rem 0 0.7rem; }
-    .emergency-callout { background: rgba(255, 90, 90, 0.08); border-left: 3px solid #ff5a5a; border-radius: 0.6rem; padding: 0.8rem 1.1rem; font-size: 0.88rem; color: #ffdad6; line-height: 1.55; margin-bottom: 0.5rem; }
-    .emergency-callout strong { color: #ffb3ab; }
-    .emergency-callout-info { background: rgba(90, 255, 120, 0.06); border-left-color: #5aff78; color: #d6ffe1; }
-    .emergency-list { list-style: none; margin-bottom: 0.3rem; }
-    .emergency-list li { color: #cbd5e1; font-size: 0.93rem; padding: 0.35rem 0 0.35rem 1.4rem; position: relative; line-height: 1.55; }
-    .emergency-list li::before { content: '›'; position: absolute; left: 0.3rem; color: #ff5a5a; font-weight: 700; }
-    .emergency-list li strong { color: #fff; font-weight: 600; }
-    .emergency-ol { list-style: none; counter-reset: em-counter; }
-    .emergency-ol li { color: #cbd5e1; font-size: 0.93rem; padding: 0.4rem 0 0.4rem 2rem; position: relative; counter-increment: em-counter; line-height: 1.55; }
-    .emergency-ol li::before { content: counter(em-counter); position: absolute; left: 0; top: 0.35rem; width: 1.4rem; height: 1.4rem; background: rgba(255, 90, 90, 0.15); border: 1px solid rgba(255, 90, 90, 0.5); color: #ffb3ab; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
-    .emergency-ol li strong { color: #fff; }
-    .code-inline { background: #070d15; border: 1px solid rgba(255, 90, 90, 0.2); border-radius: 0.5rem; padding: 0.5rem 0.8rem; font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace; font-size: 0.82rem; color: #ffdad6; margin: 0.4rem 0; white-space: pre-wrap; word-break: break-word; display: block; line-height: 1.5; }
-    .emergency-outro { margin-top: 1.6rem; padding: 1rem 1.4rem; border-left: 3px solid #ff5a5a; background: rgba(255, 90, 90, 0.05); border-radius: 0.8rem; color: #ffdad6; font-size: 0.95rem; line-height: 1.6; }
-    .online-note { background: rgba(90, 255, 120, 0.06); border: 1px solid rgba(90, 255, 120, 0.22); border-radius: 1.2rem; padding: 1rem 1.4rem; margin-bottom: 1.4rem; font-size: 0.95rem; color: #cbd5e1; display: flex; align-items: flex-start; gap: 0.8rem; line-height: 1.55; }
-    .online-note strong { color: #5aff78; font-weight: 600; }
-    .online-note .icon { font-size: 1.4rem; line-height: 1; flex-shrink: 0; margin-top: 0.1rem; }
-    .map-controls { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; margin-bottom: 1.2rem; }
-    .map-controls input { flex: 1 1 220px; min-width: 150px; background: #121a26; border: 1px solid rgba(90, 255, 120, 0.25); color: #fff; padding: 0.65rem 1rem; border-radius: 0.8rem; font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s, box-shadow 0.2s; }
-    .map-controls input::placeholder { color: #6b7a8c; }
-    .map-controls input:focus { outline: none; border-color: #5aff78; box-shadow: 0 0 0 3px rgba(90, 255, 120, 0.15); }
-    .map-controls button { background: #5aff78; color: #0b0f17; border: none; padding: 0.65rem 1.4rem; border-radius: 0.8rem; font-family: inherit; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: background 0.2s, transform 0.1s; }
-    .map-controls button:hover { background: #8affa0; }
-    .map-controls .pilot-count { color: #9aa8b9; font-size: 0.9rem; font-weight: 500; }
-    #map { height: 560px; width: 100%; border-radius: 1.2rem; overflow: hidden; border: 1px solid rgba(90, 255, 120, 0.2); box-shadow: 0 12px 25px -12px rgba(0, 0, 0, 0.6); background: #0f1622; }
-    .map-error { background: rgba(255, 90, 90, 0.08); border: 1px solid rgba(255, 90, 90, 0.35); border-radius: 1rem; padding: 1rem 1.4rem; margin-top: 1rem; color: #ffdad6; font-size: 0.92rem; line-height: 1.7; }
-    .map-error input[type=file] { margin-top: 0.6rem; color: #ffdad6; font-family: inherit; font-size: 0.85rem; }
-    .footer { max-width: 1300px; width: 100%; margin-top: 2rem; background: rgba(18, 24, 35, 0.9); backdrop-filter: blur(6px); border-radius: 1.5rem; padding: 1.2rem 1.8rem; border: 1px solid rgba(90, 255, 120, 0.12); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
-    .footer-contacts { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
-    .footer-contacts .contact-item { display: flex; align-items: center; gap: 0.45rem; color: #cbd5e1; font-size: 0.9rem; text-decoration: none; transition: color 0.2s; }
-    .footer-contacts .contact-item:hover { color: #5aff78; }
-    .footer-contacts .contact-item .ico { color: #5aff78; font-size: 1rem; }
-    .footer-meta { display: flex; align-items: center; gap: 1.2rem; font-size: 0.8rem; color: #6b7a8c; flex-wrap: wrap; }
-    .footer-meta .ivao-tag { color: #5aff78; font-weight: 500; letter-spacing: 0.4px; }
-    @media (max-width: 900px) { .emergency-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 700px) {
-      body { padding: 1rem 0.8rem; }
-      .brand { padding: 1rem 1.2rem; border-radius: 1.5rem; }
-      .brand h1 { font-size: 1.15rem; }
-      .brand .badge { display: none; }
-      .logo-icon { width: 34px; height: 34px; font-size: 1.5rem; }
-      .nav-tabs a { padding: 0.6rem 0.7rem; font-size: 0.85rem; min-width: 70px; }
-      .page { padding: 1.5rem 1.2rem; border-radius: 1.8rem; }
-      .card-grid { grid-template-columns: 1fr; }
-      .photo-placeholder { width: 100px; height: 100px; }
-      .hero h2 { font-size: 1.7rem; }
-      .hero p { font-size: 1rem; }
-      #map { height: 420px; }
-      .map-controls input { flex-basis: 100%; }
-      .footer { flex-direction: column; align-items: flex-start; padding: 1rem 1.2rem; }
-      .footer-contacts { gap: 0.8rem; flex-direction: column; align-items: flex-start; }
-      .footer-meta { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app">
@@ -203,6 +24,7 @@
     <a href="#mayday" data-page="mayday" class="tab-emergency">121.5</a>
   </nav>
 
+  <!-- Главная -->
   <section id="page-home" class="page active">
     <div class="hero">
       <h2>Добро пожаловать в <span class="accent">Домодедовское<br>авиапредприятие</span></h2>
@@ -232,6 +54,7 @@
     </div>
   </section>
 
+  <!-- Руководство -->
   <section id="page-leadership" class="page">
     <div class="section-title">Администрация</div>
     <div class="card-grid">
@@ -250,6 +73,7 @@
     </div>
   </section>
 
+  <!-- Обучение -->
   <section id="page-training" class="page">
     <div class="section-title">Учебный центр</div>
     <div class="card-grid">
@@ -271,6 +95,7 @@
     </div>
   </section>
 
+  <!-- Авиапарк -->
   <section id="page-fleet" class="page">
     <div class="section-title">Авиапарк</div>
     <div class="livery-note">
@@ -286,11 +111,12 @@
     </div>
   </section>
 
+  <!-- Онлайн -->
   <section id="page-online" class="page">
     <div class="section-title">Онлайн · IVAO Network</div>
     <div class="online-note">
       <span class="icon">🛰️</span>
-      <div>Данные подтягиваются из <strong>IVAO Whazzup API</strong>. Пока показаны все пилоты сети — фильтрация по нашей ВАК появится, когда будет известен код ВАК или префикс позывных.</div>
+      <div>Нажмите на самолёт, чтобы открыть детальную информацию и увидеть пройденный маршрут.</div>
     </div>
     <div class="map-controls">
       <input id="pilot-filter" type="text" placeholder="Фильтр: позывной, аэропорт, борт…">
@@ -301,6 +127,7 @@
     <div id="map-error" class="map-error" style="display:none;"></div>
   </section>
 
+  <!-- 121.5 -->
   <section id="page-mayday" class="page page-emergency">
     <div class="section-title section-title-emergency"><span>121.5 — Система аварийных ситуаций (MAYDAY)</span></div>
     <p class="emergency-intro"><strong>Реализм начинается там, где заканчивается обыденность.</strong> 121.5 — внутренняя система ВАК, имитирующая реальную аварийную частоту.</p>
@@ -333,146 +160,86 @@
   </div>
 </footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-(function() {
-  const navLinks = document.querySelectorAll('.nav-tabs a');
-  const pages = {
-    home: document.getElementById('page-home'),
-    leadership: document.getElementById('page-leadership'),
-    training: document.getElementById('page-training'),
-    fleet: document.getElementById('page-fleet'),
-    online: document.getElementById('page-online'),
-    mayday: document.getElementById('page-mayday')
-  };
-  function showPage(pageId) {
-    navLinks.forEach(l => l.classList.remove('active'));
-    Object.values(pages).forEach(p => p.classList.remove('active'));
-    const a = Array.from(navLinks).find(l => l.dataset.page === pageId);
-    if (a) a.classList.add('active');
-    if (pages[pageId]) pages[pageId].classList.add('active');
-    if (pageId === 'online' && typeof window.vakInitMap === 'function') window.vakInitMap();
-  }
-  navLinks.forEach(l => l.addEventListener('click', function() { showPage(this.dataset.page); }));
-  window.addEventListener('hashchange', function() {
-    const h = window.location.hash.replace('#','') || 'home';
-    showPage(pages[h] ? h : 'home');
-  });
-  const h0 = window.location.hash.replace('#','');
-  if (h0 && pages[h0]) showPage(h0);
-  else { showPage('home'); if (history.replaceState) history.replaceState(null,'','#home'); }
-})();
+<!-- ДАШБОРД САМОЛЕТА -->
+<div id="flight-dashboard">
+  <div class="dash-header">
+    <span class="dash-label">FLIGHT</span>
+    <div class="dash-callsign" id="dash-callsign">...</div>
+    <div class="dash-acft" id="dash-acft">...</div>
+    <button class="dash-close" id="dash-close">✕</button>
+  </div>
+  
+  <div class="dash-route-bar">
+    <div class="dash-airport">
+      <span class="code" id="dash-dep-code">----</span>
+      <span class="city" id="dash-dep-city">UNKNOWN</span>
+    </div>
+    <div class="dash-route-progress">
+      <div class="dash-route-plane">✈</div>
+      <div class="dash-progress-track">
+        <div class="dash-progress-fill" id="dash-progress-fill"></div>
+      </div>
+      <div class="dash-route-info">
+        <span id="dash-route-flown">0 nm flown</span>
+        <span id="dash-route-togo">0 nm to go</span>
+      </div>
+    </div>
+    <div class="dash-airport">
+      <span class="code" id="dash-arr-code">----</span>
+      <span class="city" id="dash-arr-city">UNKNOWN</span>
+    </div>
+  </div>
+  <div class="dash-route-badges">
+    <span class="dash-rbadge" id="dash-rules">IFR</span>
+    <span class="dash-rbadge" id="dash-state">En Route</span>
+  </div>
 
-(function() {
-  let map = null, pilotsLayer = null, allPilots = [], loading = false;
-  const CONFIG = { filterRemarksIncludes: null, callsignPrefixes: null, showAll: true };
-  window.vakInitMap = function() {
-    if (map) { setTimeout(() => map.invalidateSize(), 60); return; }
-    const el = document.getElementById('map');
-    if (!el) return;
-    map = L.map('map', { zoomControl: true, worldCopyJump: true }).setView([55, 50], 3);
-    L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-      maxZoom: 16
-    }).addTo(map);
-    pilotsLayer = L.layerGroup().addTo(map);
-    setTimeout(() => map.invalidateSize(), 120);
-    document.getElementById('refresh-map').addEventListener('click', loadPilots);
-    document.getElementById('pilot-filter').addEventListener('input', renderPilots);
-    loadPilots();
-  };
-  async function loadPilots() {
-    if (loading) return; loading = true;
-    const errEl = document.getElementById('map-error');
-    const statusEl = document.getElementById('pilot-count');
-    errEl.style.display = 'none';
-    statusEl.textContent = 'Загрузка данных IVAO…';
-    const api = 'https://api.ivao.aero/v2/tracker/whazzup';
-    const urls = [
-      api,
-      'https://corsproxy.io/?url=' + encodeURIComponent(api),
-      'https://api.allorigins.win/raw?url=' + encodeURIComponent(api)
-    ];
-    let data = null, lastErr = null;
-    for (const u of urls) {
-      try {
-        const r = await fetch(u, { cache: 'no-store' });
-        if (!r.ok) { lastErr = 'HTTP ' + r.status; continue; }
-        const j = await r.json();
-        if (j && j.clients && Array.isArray(j.clients.pilots)) { data = j; break; }
-        lastErr = 'Неверный формат';
-      } catch (e) { lastErr = e.message; }
-    }
-    loading = false;
-    if (!data) {
-      statusEl.textContent = 'Ошибка загрузки';
-      errEl.style.display = 'block';
-      errEl.innerHTML = '⚠️ Не удалось загрузить данные с IVAO.<br><small>Причина: ' + (lastErr||'?') + '</small><br><br>IVAO API требует OAuth и не отдаёт CORS. Можно загрузить сохранённый JSON вручную:<br><input type="file" id="map-json-file" accept=".json,application/json">';
-      document.getElementById('map-json-file').addEventListener('change', handleFile);
-      return;
-    }
-    allPilots = data.clients.pilots;
-    renderPilots();
-  }
-  function handleFile(e) {
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
-    const r = new FileReader();
-    r.onload = ev => {
-      try {
-        const j = JSON.parse(ev.target.result);
-        if (j && j.clients && Array.isArray(j.clients.pilots)) {
-          allPilots = j.clients.pilots;
-          document.getElementById('map-error').style.display = 'none';
-          renderPilots();
-        } else alert('Неверный формат JSON');
-      } catch (err) { alert('Ошибка: ' + err.message); }
-    };
-    r.readAsText(f);
-  }
-  function matches(p, fp) {
-    if (CONFIG.showAll) return true;
-    if (CONFIG.callsignPrefixes && CONFIG.callsignPrefixes.length) {
-      const cs = (p.callsign||'').toUpperCase();
-      if (!CONFIG.callsignPrefixes.some(x => cs.startsWith(x.toUpperCase()))) return false;
-    }
-    if (CONFIG.filterRemarksIncludes) {
-      const rm = (fp && fp.remarks) ? String(fp.remarks).toUpperCase() : '';
-      if (!rm.includes(CONFIG.filterRemarksIncludes.toUpperCase())) return false;
-    }
-    return true;
-  }
-  function renderPilots() {
-    if (!pilotsLayer) return;
-    pilotsLayer.clearLayers();
-    const uf = (document.getElementById('pilot-filter').value||'').trim().toLowerCase();
-    let count = 0; const bounds = L.latLngBounds();
-    allPilots.forEach(p => {
-      const t = p.lastTrack;
-      if (!t || typeof t.latitude !== 'number' || typeof t.longitude !== 'number') return;
-      const fp = p.flightPlan || {};
-      if (!matches(p, fp)) return;
-      if (uf) {
-        const hay = [p.callsign, fp.departureId, fp.arrivalId, fp.aircraftId, fp.remarks, t.state].filter(Boolean).join(' ').toLowerCase();
-        if (!hay.includes(uf)) return;
-      }
-      count++;
-      const color = t.onGround ? '#ffb703' : '#5aff78';
-      const m = L.circleMarker([t.latitude, t.longitude], { radius: 5, fillColor: color, color: '#000', weight: 1, opacity: 0.9, fillOpacity: 0.9 });
-      const route = (fp.departureId && fp.arrivalId) ? fp.departureId + ' → ' + fp.arrivalId : '—';
-      m.bindPopup('<div style="min-width:200px;color:#0b0f17;font-family:Inter,system-ui,sans-serif;font-size:13px;">' +
-        '<div style="font-size:15px;font-weight:700;margin-bottom:4px;">' + (p.callsign||'???') + '</div>' +
-        '<div style="color:#444;margin-bottom:4px;">' + (fp.aircraftId||'—') + '</div>' +
-        '<div style="font-weight:600;margin-bottom:4px;">' + route + '</div>' +
-        '<div style="color:#666;margin-bottom:2px;">' + (t.state||'—') + '</div>' +
-        '<div style="color:#444;">Alt: ' + (t.altitude??'—') + ' ft · GS: ' + (t.groundSpeed??'—') + ' kt</div></div>');
-      pilotsLayer.addLayer(m);
-      bounds.extend([t.latitude, t.longitude]);
-    });
-    document.getElementById('pilot-count').textContent = 'На карте: ' + count + ' из ' + allPilots.length;
-    if (count > 0 && map) map.fitBounds(bounds.pad(0.15), { maxZoom: 6 });
-  }
-})();
-</script>
+  <div class="dash-section">
+    <div class="dash-section-title">Live Data</div>
+    <div class="dash-grid">
+      <div class="dash-cell"><span class="val" id="dash-alt">---</span><span class="unit">ALTITUDE</span></div>
+      <div class="dash-cell"><span class="val" id="dash-gs">---</span><span class="unit">GROUND SPEED</span></div>
+      <div class="dash-cell"><span class="val" id="dash-hdg">---</span><span class="unit">HEADING</span></div>
+      <div class="dash-cell"><span class="val" id="dash-squawk">---</span><span class="unit">SQUAWK</span></div>
+      <div class="dash-cell"><span class="val" id="dash-online">--:--</span><span class="unit">ONLINE</span></div>
+      <div class="dash-cell"><span class="val" id="dash-eta">--:--</span><span class="unit">ETA (UTC)</span></div>
+    </div>
+  </div>
+
+  <div class="dash-section">
+    <div class="dash-section-title">Flight Plan</div>
+    <div class="dash-grid">
+      <div class="dash-cell"><span class="val" id="dash-acft-type">---</span><span class="unit">AIRCRAFT</span></div>
+      <div class="dash-cell"><span class="val" id="dash-fl">---</span><span class="unit">PLANNED</span></div>
+      <div class="dash-cell"><span class="val" id="dash-speed">---</span><span class="unit">SPEED</span></div>
+      <div class="dash-cell"><span class="val" id="dash-dep-time">--:--</span><span class="unit">DEP TIME</span></div>
+      <div class="dash-cell"><span class="val" id="dash-eet">--:--</span><span class="unit">TOTAL EET</span></div>
+      <div class="dash-cell"><span class="val" id="dash-remaining">--:--</span><span class="unit">REMAINING</span></div>
+    </div>
+  </div>
+
+  <div class="dash-section">
+    <div class="dash-section-title">Route</div>
+    <div class="dash-text-block" id="dash-route">...</div>
+  </div>
+
+  <div class="dash-section">
+    <div class="dash-section-title">Remarks</div>
+    <div class="dash-text-block" id="dash-remarks">...</div>
+  </div>
+
+  <div class="dash-section">
+    <div class="dash-pilot-card">
+      <div class="dash-pilot-icon">👤</div>
+      <div class="dash-pilot-info">
+        <h4 id="dash-pilot-name">---</h4>
+        <p>Simulator: <span id="dash-simulator">---</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
