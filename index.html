@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Домодедовское авиапредприятие — IVAO VA</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <!-- Cesium CSS для 3D -->
+  <link href="Cesium/Widgets/widgets.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -166,6 +168,10 @@
     <span class="dash-label">FLIGHT</span>
     <div class="dash-callsign" id="dash-callsign">...</div>
     <div class="dash-acft" id="dash-acft">...</div>
+    <!-- Кнопка 3D -->
+    <button id="dash-3d-btn" style="margin-top: 10px; background: #5aff78; color: #0b0f17; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+      🌍 Открыть 3D вид
+    </button>
     <button class="dash-close" id="dash-close">✕</button>
   </div>
   
@@ -239,7 +245,15 @@
   </div>
 </div>
 
+<!-- МОДАЛЬНОЕ ОКНО 3D -->
+<div id="viewer3d-modal">
+  <div id="cesiumContainer"></div>
+  <button id="close-3d-btn">✕ Закрыть 3D</button>
+</div>
+
+<!-- Leaflet и Cesium -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="Cesium/Cesium.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
