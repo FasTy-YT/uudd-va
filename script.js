@@ -29,7 +29,7 @@ function getGeodesicPoints(lat1, lon1, lat2, lon2, steps = 40) {
 function getAltColor(alt) {
   if (alt < 1000) return '#ffffff';
   if (alt < 10000) return '#00ffff';
-  if (alt < 20000) return '#00ff00';
+  if (alt < 20000) return '#00d2ff'; // Изменено на синий
   if (alt < 30000) return '#ffff00';
   return '#ff4500';
 }
@@ -256,12 +256,12 @@ function showDashboard(p) {
     const a2 = airportDB[arr];
     
     const plannedPath = getGeodesicPoints(a1.lat, a1.lon, a2.lat, a2.lon);
-    L.polyline(plannedPath, { color: '#5aff78', weight: 1, dashArray: '4, 8', opacity: 0.5 }).addTo(routeLayer);
+    L.polyline(plannedPath, { color: '#00d2ff', weight: 1, dashArray: '4, 8', opacity: 0.5 }).addTo(routeLayer);
     
-    L.circleMarker([a1.lat, a1.lon], { radius: 4, color: '#fff', fillColor: '#5aff78', fillOpacity: 1, weight: 2 })
+    L.circleMarker([a1.lat, a1.lon], { radius: 4, color: '#fff', fillColor: '#00d2ff', fillOpacity: 1, weight: 2 })
      .addTo(routeLayer).bindTooltip(dep, { permanent: true, direction: 'top', offset: [0, -5] });
      
-    L.circleMarker([a2.lat, a2.lon], { radius: 4, color: '#fff', fillColor: '#5aff78', fillOpacity: 1, weight: 2 })
+    L.circleMarker([a2.lat, a2.lon], { radius: 4, color: '#fff', fillColor: '#00d2ff', fillOpacity: 1, weight: 2 })
      .addTo(routeLayer).bindTooltip(arr, { permanent: true, direction: 'top', offset: [0, -5] });
   }
 
@@ -329,7 +329,7 @@ function renderPilots() {
       <div style="text-align:center; line-height:1.3;">
         <div style="font-size:14px; font-weight:800; color:#fff; margin-bottom:2px;">${cs}</div>
         <div style="font-size:11px; color:#9aa8b9; margin-bottom:4px;">${acftType}</div>
-        <div style="font-size:13px; font-weight:700; color:#5aff78;">${depAirport} → ${arrAirport}</div>
+        <div style="font-size:13px; font-weight:700; color:#00d2ff;">${depAirport} → ${arrAirport}</div>
       </div>
     `;
     
@@ -391,13 +391,10 @@ function open3DView(pilot) {
     cesiumViewer.scene.globe.showGroundAtmosphere = false;
     cesiumViewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#0b0f17');
 
-    // Настройка управления камерой
     const controller = cesiumViewer.scene.screenSpaceCameraController;
     controller.inertiaSpin = 0;
     controller.inertiaTranslate = 0;
     controller.inertiaZoom = 0;
-    
-    // ЗАПРЕЩАЕМ СДВИГАТЬСЯ В СТОРОНУ ОТ САМОЛЕТА (чтобы не уплывала)
     controller.enableTranslate = false; 
   }
 
@@ -408,7 +405,6 @@ function open3DView(pilot) {
   const currentAltM = currentAltFt * 0.3048; 
   
   const apiHeading = t.heading || 0; 
-  // Поворот модели: вычитаем 90 градусов, чтобы нос смотрел по курсу
   const headingRad = Cesium.Math.toRadians(apiHeading - 90);
   
   let acftCode = (fp.aircraftId) ? fp.aircraftId.toUpperCase() : 'DEFAULT';
@@ -438,11 +434,9 @@ function open3DView(pilot) {
     }
   });
 
-  // Задаем поворот модели
   const hpr = new Cesium.HeadingPitchRoll(headingRad, 0, 0);
   planeEntity.orientation = Cesium.Transforms.headingPitchRollQuaternion(position, hpr);
 
-  // Отрисовка трека
   if (fp.departureId && typeof airportDB !== 'undefined' && airportDB[fp.departureId]) {
     const dep = airportDB[fp.departureId];
     const points = getGeodesicPoints(dep.lat, dep.lon, t.latitude, t.longitude, 50);
@@ -452,11 +446,11 @@ function open3DView(pilot) {
       const f1 = i / (points.length - 1), f2 = (i + 1) / (points.length - 1);
       const alt1 = (currentAltFt * f1) * 0.3048, alt2 = (currentAltFt * f2) * 0.3048;
 
-      let colorHex = '#5aff78';
+      let colorHex = '#00d2ff';
       const simAltFt = currentAltFt * f1;
       if (simAltFt < 1000) colorHex = '#ffffff';
       else if (simAltFt < 10000) colorHex = '#00ffff';
-      else if (simAltFt < 20000) colorHex = '#00ff00';
+      else if (simAltFt < 20000) colorHex = '#00d2ff';
       else if (simAltFt < 30000) colorHex = '#ffff00';
       else colorHex = '#ff4500';
 
@@ -469,17 +463,10 @@ function open3DView(pilot) {
     }
   }
 
-  // === ИДЕАЛЬНАЯ КАМЕРА-ПОГОНЯ ===
-  // 1. Сначала задаем смещение ОТНОСИТЕЛЬНО самолета.
-  // Так как нос смотрит по оси Y, то:
-  // X = 0 (по центру), Y = -2000 (сзади на 2 км), Z = 500 (сверху на 0.5 км).
   planeEntity.viewFrom = new Cesium.Cartesian3(0, -2000, 500);
-
-  // 2. Только ПОСЛЕ этого включаем слежение
   cesiumViewer.trackedEntity = planeEntity;
 }
 
-// Закрытие 3D
 document.getElementById('close-3d-btn').addEventListener('click', function() {
   document.getElementById('viewer3d-modal').classList.remove('active');
 });
